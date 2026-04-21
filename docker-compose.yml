@@ -1,0 +1,70 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:Z
+      - ../client/play.pokemonshowdown.com:/srv/client:ro,Z
+      - caddy_data:/data
+      - caddy_config:/config
+
+  ps-server:
+    build:
+      context: ../vgc-rl/pokemon-showdown
+      dockerfile: ../../infra/docker/server/Dockerfile
+    restart: unless-stopped
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker/server/config.js:/app/config/config.js:Z
+    depends_on:
+      login:
+        condition: service_healthy
+    environment:
+      - LOGIN_SERVER_URL=http://login:3001/api/
+
+  login:
+    build:
+      context: ./login-server
+    restart: unless-stopped
+    expose:
+      - "3001"
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./data/users.db:/app/users.db:Z
+      - ./data/keys:/app/keys:ro,Z
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/action.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  bot:
+    build:
+      context: ../vgc-rl
+      dockerfile: ../infra/docker/bot/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      ps-server:
+        condition: service_started
+      login:
+        condition: service_healthy
+    environment:
+      - SHOWDOWN_BOT_PASSWORD=${BOT_PASSWORD}
+      - SHOWDOWN_USERNAME=${BOT_USERNAME:-Bot}
+      - SHOWDOWN_BATTLE_FORMAT=${BOT_FORMAT:-gen9vgc2025regh}
+      - SHOWDOWN_CHECKPOINT=${BOT_CHECKPOINT:-/app/checkpoints/ppo_checkpoint.pt}
+      - SHOWDOWN_CHALLENGE_LIMIT=${BOT_CHALLENGE_LIMIT:-1000000}
+      - SHOWDOWN_WS_URL=${BOT_WS_URL:-ws://ps-server:8000/showdown/websocket}
+      - SHOWDOWN_AUTH_URL=${BOT_AUTH_URL:-http://login:3001/api/action.php?}
+      - SHOWDOWN_LOG_LEVEL=${BOT_LOG_LEVEL:-INFO}
+
+volumes:
+  caddy_data:
+  caddy_config:
