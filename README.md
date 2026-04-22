@@ -32,8 +32,8 @@ This repository is designed to run within a specific directory structure. You mu
 ```text
 .
 ├── infra/           # (This repository)
-├── vgc-rl/          # RL Player & Showdown Server source
-└── client/          # Pokemon Showdown client build
+├── vgc-rl/          # (https://github.com/akkshay0107/vgc-rl)
+└── client/          # (https://github.com/akkshay0107/client)
 ```
 
 Additionally you need **Docker** and **Docker Compose** installed.
@@ -44,6 +44,7 @@ Additionally you need **Docker** and **Docker Compose** installed.
    Copy `.env.example` to `.env` and fill in your credentials:
    ```bash
    cp .env.example .env
+   # modify .env with your credentials as needed
    ```
 
 2. **Generate Keys & Users**:
