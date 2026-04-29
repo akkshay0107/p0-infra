@@ -22,6 +22,7 @@ services:
       - "8000:8000"
     volumes:
       - ./docker/server/config.js:/app/config/config.js:Z
+      - ./data/keys/public.pem:/app/config/public.pem:ro,Z
     depends_on:
       login:
         condition: service_healthy

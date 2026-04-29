@@ -54,8 +54,22 @@ db.serialize(() => {
       }
       const password = process.env.BOT_PASSWORD || generatePassword();
       const hash = bcrypt.hashSync(password, 10);
-      db.run("INSERT INTO users VALUES (?, ?, ?)", [botId, 'Bot', hash]);
-      console.log(`Created Bot user.`);
+      db.run("INSERT INTO users VALUES (?, ?, ?)", [botId, 'Bot', hash], (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        // Add Bot to CSV
+        const csvExists = fs.existsSync(csvPath);
+        let content = "";
+        if (!csvExists) {
+          content = "username,password\n";
+        }
+        content += `Bot,${password}\n`;
+        fs.appendFileSync(csvPath, content);
+        console.log(`Created Bot user and added to CSV.`);
+      });
       if (!process.env.BOT_PASSWORD) {
         console.log(`Generated Bot password: ${password}`);
       }
