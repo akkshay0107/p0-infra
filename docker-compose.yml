@@ -66,9 +66,11 @@ services:
       - SHOWDOWN_AUTH_URL=${BOT_AUTH_URL:-http://login:3001/api/action.php?}
       - SHOWDOWN_LOG_LEVEL=${BOT_LOG_LEVEL:-INFO}
     volumes:
-      - ../vgc-rl/checkpoints:/app/checkpoints:ro,Z
+      - ../vgc-rl/checkpoints:/app/checkpoints:rw,Z
       - ../vgc-rl/src:/app/src:ro,Z
       - ../vgc-rl/teams:/app/teams:ro,Z
+      - ../vgc-rl/runs:/app/runs:rw,Z
+      - ../vgc-rl/replays:/app/replays:rw,Z
 
 volumes:
   caddy_data:
