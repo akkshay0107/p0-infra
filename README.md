@@ -1,4 +1,4 @@
-This repository contains the infrastructure configuration for the Pokemon VGC Research Environment, including a local battle server, a custom login server, and a Caddy reverse proxy.
+This repository contains the infrastructure configuration for the p0 environment, including a local battle server, a custom login server, and a Caddy reverse proxy.
 
 ## Overview
 
@@ -34,9 +34,9 @@ This repository is designed to run within a specific directory structure. You mu
 
 ```text
 .
-├── infra/           # (This repository)
-├── vgc-rl/          # (https://github.com/akkshay0107/vgc-rl)
-└── client/          # (https://github.com/akkshay0107/client)
+├── p0-infra/        # (This repository)
+├── p0/              # (https://github.com/akkshay0107/p0)
+└── p0-client/       # (https://github.com/akkshay0107/p0-client)
 ```
 
 Additionally you need **Docker** and **Docker Compose** installed.

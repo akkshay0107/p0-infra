@@ -13,7 +13,7 @@ services:
 
   ps-server:
     build:
-      context: ../vgc-rl/pokemon-showdown
+      context: ../p0/pokemon-showdown
       dockerfile: ../../infra/docker/server/Dockerfile
     restart: unless-stopped
     expose:
@@ -49,7 +49,7 @@ services:
 
   bot:
     build:
-      context: ../vgc-rl
+      context: ../p0
       dockerfile: ../infra/docker/bot/Dockerfile
     restart: unless-stopped
     depends_on:
@@ -67,12 +67,15 @@ services:
       - SHOWDOWN_AUTH_URL=${BOT_AUTH_URL:-http://login:3001/api/action.php?}
       - SHOWDOWN_LOG_LEVEL=${BOT_LOG_LEVEL:-INFO}
     volumes:
-      - ../vgc-rl/checkpoints:/app/checkpoints:rw,Z
-      - ../vgc-rl/src:/app/src:ro,Z
-      - ../vgc-rl/teams:/app/teams:ro,Z
-      - ../vgc-rl/runs:/app/runs:rw,Z
-      - ../vgc-rl/replays:/app/replays:rw,Z
+      - ../p0/checkpoints:/app/checkpoints:rw,Z
+      - ../p0/src:/app/src:ro,Z
+      - ../p0/teams:/app/teams:ro,Z
+      - ../p0/runs:/app/runs:rw,Z
+      - ../p0/replays:/app/replays:rw,Z
 
 volumes:
+  caddy_data:
+  caddy_config:
+
   caddy_data:
   caddy_config:
