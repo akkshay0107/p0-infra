@@ -7,14 +7,14 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:Z
-      - ../client/play.pokemonshowdown.com:/srv/client:ro,Z
+      - ../p0-client/play.pokemonshowdown.com:/srv/client:ro,Z
       - caddy_data:/data
       - caddy_config:/config
 
   ps-server:
     build:
       context: ../p0/pokemon-showdown
-      dockerfile: ../../infra/docker/server/Dockerfile
+      dockerfile: ../../p0-infra/docker/server/Dockerfile
     restart: unless-stopped
     expose:
       - "8000"
@@ -50,7 +50,7 @@ services:
   bot:
     build:
       context: ../p0
-      dockerfile: ../infra/docker/bot/Dockerfile
+      dockerfile: ../p0-infra/docker/bot/Dockerfile
     restart: unless-stopped
     depends_on:
       ps-server:
@@ -77,5 +77,3 @@ volumes:
   caddy_data:
   caddy_config:
 
-  caddy_data:
-  caddy_config:
